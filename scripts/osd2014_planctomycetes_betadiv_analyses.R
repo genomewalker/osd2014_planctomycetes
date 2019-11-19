@@ -21,7 +21,7 @@ source("libs/functions_com_sim.R")
 source("libs/libs.R")
 
 # Load SPARCC matrices
-load("data/osd2104_global_TINA_PINA.Rda")
+load("data/osd2014_global_TINA_PINA.Rda")
 load("data/osd2014_meow_regions.Rda")
 
 # Load phyloseq objects
