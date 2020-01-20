@@ -157,11 +157,11 @@ g.c <- igraph::simplify(g.c, edge.attr.comb = list(weight = function(x) median(x
 sign_color <- c("#404040", "#B7144B")
 names(sign_color) <- c("POS", "NEG")
 
-class_colors <- c('#111111', '#65ADC2', '#233B43',
-                  '#E84646', '#C29365', '#362C21',
-                  '#316675', '#168E7F', '#109B37')
+plancto_classes <- G_sel %>% activate(nodes) %>% as_tibble() %>% .$Class %>% unique()
+class_colors <- (c("#00a0b0", "#edc951", "#cc2a36", "#eb6841", "#63ace5", "#4f372d"))
 
-names(class_colors) <- G_sel %>% activate(nodes) %>% as_tibble() %>% .$Class %>% unique()
+
+names(class_colors) <- plancto_classes
 
 # Get the graph layout of the graph so it will be used for all the different plots
 layout <- create_layout(G_sel, layout = 'fr')
@@ -173,7 +173,7 @@ g_class <- ggraph(layout) +
   scale_edge_alpha(guide = FALSE) +
   scale_edge_width_continuous(range = c(0.2, 1.2)) +
   scale_edge_color_manual(values = sign_color) +
-  scale_color_manual(values = class_colors) +
+  scale_fill_manual(values = class_colors) +
   theme_graph(base_family = 'Helvetica', base_size = 9) +
   theme(legend.position = "none",
         legend.key.width = unit(2, units = "mm"),
@@ -218,6 +218,11 @@ graph_prop <- dplyr::as_data_frame(G_sel %>% activate(nodes)) %>%
   add_count() %>%
   ungroup() %>%
   inner_join(qpsmelt(physeq_prop) %>% dplyr::rename(asv = OTU))
+
+samples_sorted <- osd2014_plancto_pcoa$vectors %>%
+  as_tibble(rownames = "label")  %>%
+  dplyr::select(label, Axis.1, Axis.2) %>%
+  dplyr::arrange(Axis.1, -Axis.2)
 
 graph_prop_agg <- graph_prop %>%
   dplyr::select(label, com, Abundance, Class, n) %>%
